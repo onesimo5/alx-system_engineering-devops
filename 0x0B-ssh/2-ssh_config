@@ -2,9 +2,10 @@
 # SSH client configuration
 
 Host *
-	PasswordAuthentication no
-	IdentityFile ~/.ssh/school
-	SendEnv LANG LC_*
-	HashKnownHosts yes
-	GSSAPAuthrntication yes
-	GSSAPIDelegateCrendentials no
+    PasswordAuthentication no
+    IdentityFile ~/.ssh/school
+    SendEnv LANG LC_*
+    HashKnownHosts yes
+    GSSAPIAuthentication yes
+    GSSAPIDelegateCredentials no
+
