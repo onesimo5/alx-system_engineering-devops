@@ -1,3 +1,5 @@
 #!/usr/bin/bash
-#start apache2 inside docker
-service apache2 start
+# turned on Apache server with this magic line
+echo "Hello Holberton" > /var/www/html/index.html
+sudo service apache2 status
+service apache2 restart
