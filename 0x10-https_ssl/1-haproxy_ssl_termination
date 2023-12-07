@@ -1,0 +1,43 @@
+global
+        log 127.0.0.1 local0 notice
+        maxconn 200 user haproxy
+        group haproxy
+
+defaults
+        log     global
+        mode    http
+        option  httplog
+        option  dontlognull
+        retries 3
+        option  redispatch
+        timeout conncet 5000
+        timeout clinet  30000
+        timeout server  30000
+        errorfile 400 /etc/haproxy/errors/400.https
+        errorfile 403 /etc/haproxy/errors/403.https
+        errorfile 408 /etc/haproxy/errors/408.https
+        errorfile 500 /etc/haproxy/errors/500.https
+        errorfile 502 /etc/haproxy/errors/502.https
+        errorfile 503 /etc/haproxy/errors/503.https
+        errorfile 504 /etc/haproxy/errors/504.https
+
+frontend www-http
+        bind   0.0.0.0:80
+        http-request set-header X-Forwarded-Proto http
+        default_backend www-backend
+
+frontend www-https
+        bind   0.0.0.0:443 ssl crt /etc/haproxy/certs/www.onesimo.tech.pem
+        http-request set-header X-Forwarded-Proto https
+        acl    letsencrypt-acl path_beg /.well-known/acme-challenge/
+        use_backend letsencrypt-backend if letsencrypt-acl
+        default_backend www-backend
+
+backend www-backend
+        balance  roundrobin
+        redirect scheme https if !{ ssl_fc }
+        server 1733-web-01 54.162.45.57 check
+        server 1733-web-02 54.210.1.251 check
+
+backend letsencrypt-backend
+        server letsencrypt 127.0.0.1:54321
