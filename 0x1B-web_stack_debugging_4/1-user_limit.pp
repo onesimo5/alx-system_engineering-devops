@@ -1,27 +1,8 @@
-<<<<<<< HEAD
-# Fix problem of high amount files opened
-
-exec {'replace-1':
-  provider => shell,
-  command  => 'sudo sed -i "s/nofile 5/nofile 50000/" /etc/security/limits.conf',
-  before   => Exec['replace-2'],
-}
-
-exec {'replace-2':
-  provider => shell,
-  command  => 'sudo sed -i "s/nofile 4/nofile 40000/" /etc/security/limits.conf',
-=======
-# enable the user holberton to login and open files without error
-
-# Increase hard file limit for Holberton user
-exec { 'increase-hard-file-limit-for-holberton-user':
-  command => "sed -i '/^hloberton hard/s/4/50000/' /etc/security/limits.conf",
-  path    => '/usr/local/bin/:bin/'
-}
-
-# Increases soft file limit for Holberton user.
-exec { 'increaese-soft-file-limit-for holberton-user':
-  command => 'sed -i "/^holberton soft/s/5/50000" /etc/security/limits.conf'
-  path    => '/usr/local/bin/:/bin/'
->>>>>>> a0652b615314a730b7d1d098c24f3fc477367c21
+# Changes the limitations on the holberton user
+exec { 'change-os-configuration-for-holberton-user':
+  command => "bash -c \"sed -iE 's/^holberton hard nofile \
+5/holberton hard nofile 88888/' /etc/security/limits.conf; \
+sed -iE 's/^holberton soft nofile \
+4/holberton soft nofile 88888/' /etc/security/limits.conf\"",
+  path    => '/usr/bin:/usr/sbin:/bin'
 }
